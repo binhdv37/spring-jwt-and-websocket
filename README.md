@@ -1,5 +1,5 @@
-# spring-jwt-app-base-project
-- This is a spring boot base app with jwt authentication.
+# spring-jwt-and-websocket
+- A spring boot app with jwt and websocket intergration
 
 # Init db data:
 - Generate db schema by code :
