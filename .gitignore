@@ -33,3 +33,4 @@ build/
 .vscode/
 
 src/main/resources/webapp/node_modules
+src/main/resources/webapp/package-lock.json
