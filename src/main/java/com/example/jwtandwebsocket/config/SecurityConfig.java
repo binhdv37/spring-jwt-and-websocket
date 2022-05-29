@@ -25,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final String REST_LOGIN_ENDPOINT = "/api/auth/login";
     private final String NONE_TOKEN_BASED_AUTH_ENTRY = "/api/noauth/**";
     private final String TOKEN_BASED_AUTH_ENTRY = "/api/**";
+    private final String WS_TOKEN_BASED_AUTH_ENTRY = "/api/ws/**";
 
     @Autowired
     @Qualifier(value = "customAuthenFailureHandler")
@@ -80,9 +82,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(TOKEN_BASED_AUTH_ENTRY).authenticated()
+                .antMatchers(WS_TOKEN_BASED_AUTH_ENTRY).authenticated()
                 .and()
                 .addFilterBefore(buildRestLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(buildJwtTokenAuthenProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(buildJwtTokenAuthenProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(buildWsJwtTokenAuthenProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     protected RestLoginProcessingFilter buildRestLoginProcessingFilter() throws Exception {
@@ -96,6 +100,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         pathsToSkip.addAll(Arrays.asList(REST_LOGIN_ENDPOINT, NONE_TOKEN_BASED_AUTH_ENTRY));
         SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY);
         JwtTokenAuthenProcessingFilter filter = new JwtTokenAuthenProcessingFilter(failureHandler, tokenExtractor, matcher);
+        filter.setAuthenticationManager(this.authenticationManagerBean());
+        return filter;
+    }
+
+    protected JwtTokenAuthenProcessingFilter buildWsJwtTokenAuthenProcessingFilter() throws Exception {
+        AntPathRequestMatcher matcher = new AntPathRequestMatcher(WS_TOKEN_BASED_AUTH_ENTRY);
+        JwtTokenAuthenProcessingFilter filter
+                = new JwtTokenAuthenProcessingFilter(failureHandler, tokenExtractor, matcher);
         filter.setAuthenticationManager(this.authenticationManagerBean());
         return filter;
     }
