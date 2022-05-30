@@ -4,7 +4,9 @@ import com.example.jwtandwebsocket.common.constant.AuthorityConstant;
 import com.example.jwtandwebsocket.common.exception.MyAppException;
 import com.example.jwtandwebsocket.dto.user.UserDto;
 import com.example.jwtandwebsocket.service.security.model.SecurityUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/user")
 public class UserController extends BaseController {
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @PreAuthorize("hasAnyAuthority(\"" + AuthorityConstant.USER_VIEW + "\")")
     @GetMapping(value = "/{id}")
@@ -37,5 +42,11 @@ public class UserController extends BaseController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable UUID id) throws MyAppException {
         return ResponseEntity.ok(checkNullAndToBaseResp(userService.deleteById(id)));
+    }
+
+    @GetMapping("/sendMessage")
+    public ResponseEntity<?> sendMessage(@RequestParam(name = "message") String message) throws MyAppException {
+        this.messagingTemplate.convertAndSend("/topic/greeting", message);
+        return ResponseEntity.ok().build();
     }
 }

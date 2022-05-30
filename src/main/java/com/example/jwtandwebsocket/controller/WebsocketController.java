@@ -12,7 +12,7 @@ public class WebsocketController extends WebsocketBaseController {
     // the returned value being sent to broker channel, then being sent to topic "/topic/greeting"
     @MessageMapping("/greeting")
     public String sendGreetingMessage(String message) {
+        System.out.println("Getting some message: " + message);
         return "[" + LocalDate.now().toString() + ": " + message;
     }
-
 }

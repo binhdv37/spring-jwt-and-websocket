@@ -6,7 +6,8 @@ import com.example.jwtandwebsocket.service.security.provider.JwtTokenAuthenProvi
 import com.example.jwtandwebsocket.service.security.provider.RestAuthenProvider;
 import com.example.jwtandwebsocket.service.security.requestMatcher.SkipPathRequestMatcher;
 import com.example.jwtandwebsocket.utils.token.JwtTokenFactory;
-import com.example.jwtandwebsocket.utils.token.TokenExtractor;
+import com.example.jwtandwebsocket.utils.token.TokenHeaderExtractor;
+import com.example.jwtandwebsocket.utils.token.TokenParamExtractor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,7 +24,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -49,13 +49,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private ObjectMapper objectMapper;
 
     @Autowired
-    @Lazy private RestAuthenProvider restAuthenProvider;
+    @Lazy
+    private RestAuthenProvider restAuthenProvider;
 
     @Autowired
-    @Lazy private JwtTokenAuthenProvider jwtTokenAuthenProvider;
+    @Lazy
+    private JwtTokenAuthenProvider jwtTokenAuthenProvider;
 
     @Autowired
-    private TokenExtractor tokenExtractor;
+    private TokenHeaderExtractor tokenHeaderExtractor;
+
+    @Autowired
+    private TokenParamExtractor tokenParamExtractor;
 
     @Autowired
     private JwtTokenFactory tokenFactory;
@@ -79,6 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(REST_LOGIN_ENDPOINT).permitAll()
                 .antMatchers(NONE_TOKEN_BASED_AUTH_ENTRY).permitAll()
+//                .antMatchers(WS_TOKEN_BASED_AUTH_ENTRY).permitAll()
                 .and()
                 .authorizeRequests()
                 .antMatchers(TOKEN_BASED_AUTH_ENTRY).authenticated()
@@ -97,9 +103,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     protected JwtTokenAuthenProcessingFilter buildJwtTokenAuthenProcessingFilter() throws Exception {
         List<String> pathsToSkip = new ArrayList<>();
-        pathsToSkip.addAll(Arrays.asList(REST_LOGIN_ENDPOINT, NONE_TOKEN_BASED_AUTH_ENTRY));
+        pathsToSkip.addAll(Arrays.asList(REST_LOGIN_ENDPOINT, NONE_TOKEN_BASED_AUTH_ENTRY, WS_TOKEN_BASED_AUTH_ENTRY));
         SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY);
-        JwtTokenAuthenProcessingFilter filter = new JwtTokenAuthenProcessingFilter(failureHandler, tokenExtractor, matcher);
+        JwtTokenAuthenProcessingFilter filter = new JwtTokenAuthenProcessingFilter(failureHandler, tokenHeaderExtractor, matcher);
         filter.setAuthenticationManager(this.authenticationManagerBean());
         return filter;
     }
@@ -107,7 +113,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected JwtTokenAuthenProcessingFilter buildWsJwtTokenAuthenProcessingFilter() throws Exception {
         AntPathRequestMatcher matcher = new AntPathRequestMatcher(WS_TOKEN_BASED_AUTH_ENTRY);
         JwtTokenAuthenProcessingFilter filter
-                = new JwtTokenAuthenProcessingFilter(failureHandler, tokenExtractor, matcher);
+                = new JwtTokenAuthenProcessingFilter(failureHandler, tokenParamExtractor, matcher);
         filter.setAuthenticationManager(this.authenticationManagerBean());
         return filter;
     }
