@@ -84,15 +84,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(REST_LOGIN_ENDPOINT).permitAll()
                 .antMatchers(NONE_TOKEN_BASED_AUTH_ENTRY).permitAll()
-//                .antMatchers(WS_TOKEN_BASED_AUTH_ENTRY).permitAll()
+                .antMatchers(WS_TOKEN_BASED_AUTH_ENTRY).permitAll()
                 .and()
                 .authorizeRequests()
                 .antMatchers(TOKEN_BASED_AUTH_ENTRY).authenticated()
-                .antMatchers(WS_TOKEN_BASED_AUTH_ENTRY).authenticated()
+//                .antMatchers(WS_TOKEN_BASED_AUTH_ENTRY).authenticated()
                 .and()
                 .addFilterBefore(buildRestLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(buildJwtTokenAuthenProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(buildWsJwtTokenAuthenProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(buildJwtTokenAuthenProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
+//                .addFilterBefore(buildWsJwtTokenAuthenProcessingFilter(), UsernamePasswordAuthenticationFilter.class);;
     }
 
     protected RestLoginProcessingFilter buildRestLoginProcessingFilter() throws Exception {
