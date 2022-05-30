@@ -92,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(buildRestLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(buildJwtTokenAuthenProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
-//                .addFilterBefore(buildWsJwtTokenAuthenProcessingFilter(), UsernamePasswordAuthenticationFilter.class);;
+//                .addFilterBefore(buildWsJwtTokenAuthenProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     protected RestLoginProcessingFilter buildRestLoginProcessingFilter() throws Exception {

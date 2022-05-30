@@ -19,7 +19,9 @@ export class MessageService {
     this.stompClient = Stomp.over(ws);
     const that = this;
     // tslint:disable-next-line:only-arrow-functions
-    this.stompClient.connect({}, function(frame) {
+    this.stompClient.connect(
+      {"X-Authorization": this.token}, // custom stomp native header
+      function(frame) {
       that.stompClient.subscribe('/topic/greeting', (message) => {
         if (message.body) {
           that.msg.push(message.body);
