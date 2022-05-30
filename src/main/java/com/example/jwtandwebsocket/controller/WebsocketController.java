@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import java.time.LocalDate;
 
 @Controller
-public class WebsocketController extends WebsocketBaseController {
+public class WebsocketController extends BaseWebsocketController {
 
     // handler all send request from client to path "/app/greeting",
     // the returned value being sent to broker channel, then being sent to topic "/topic/greeting"
