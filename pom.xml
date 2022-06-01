@@ -80,6 +80,12 @@
             <version>2.0.1.Final</version>
         </dependency>
 
+        <!-- can cai nay cho th dung broker relay  -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-reactor-netty</artifactId>
+        </dependency>
+
 
     </dependencies>
 

@@ -16,8 +16,10 @@ import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.simp.stomp.StompReactorNettyCodec;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.messaging.tcp.reactor.ReactorNettyTcpClient;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -41,10 +43,35 @@ public class WebsocketStompConfig implements WebSocketMessageBrokerConfigurer {
                 .withSockJS();
     }
 
+    /*
+        How to config rabbitmq:
+            - Enable stomp support: rabbitmq-plugins enable rabbitmq_stomp
+            - Map port: 61613 (rabbitmq stomp adapter default port), 15672, 5672
+     */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
+        ReactorNettyTcpClient<byte[]> client = new ReactorNettyTcpClient<>(tcpClient -> tcpClient
+                .host("localhost")
+                .port(61613),
+//                .secure(SslProvider.defaultClientProvider()),
+                new StompReactorNettyCodec()
+        );
+
         registry.setApplicationDestinationPrefixes("/app");
-        registry.enableSimpleBroker("/topic");
+        registry.enableStompBrokerRelay("/topic")
+                .setAutoStartup(true)
+//                .setSystemLogin("amazonmq-login")
+//                .setSystemPasscode("amazonmq-pass")
+                .setClientLogin("guest")
+                .setClientPasscode("guest")
+                .setTcpClient(client);
+
+//        registry.setApplicationDestinationPrefixes("/app");
+//        registry.enableStompBrokerRelay("/topic")
+//                .setRelayHost("localhost")
+//                .setRelayPort(5672)
+//                .setClientLogin("guest")
+//                .setClientPasscode("guest");
     }
 
     @Override
