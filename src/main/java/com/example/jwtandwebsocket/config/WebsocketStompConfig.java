@@ -28,7 +28,7 @@ import java.util.List;
 @Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
-@Order(Ordered.HIGHEST_PRECEDENCE + 99)
+@Order(Ordered.HIGHEST_PRECEDENCE + 99) // make interceptor highest precedence
 public class WebsocketStompConfig implements WebSocketMessageBrokerConfigurer {
 
     @Autowired
