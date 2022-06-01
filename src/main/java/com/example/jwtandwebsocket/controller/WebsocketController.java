@@ -18,4 +18,6 @@ public class WebsocketController extends BaseWebsocketController {
         System.out.println("Getting some message: " + message);
         return "[" + LocalDate.now().toString() + ": " + message;
     }
+
+
 }

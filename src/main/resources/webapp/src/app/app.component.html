@@ -22,11 +22,62 @@
     </svg>
   </div>
 
-  <input class="form-control" type="text" placeholder="message" [(ngModel)]="input">
-  <button class="btn btn-success" (click)="sendMessage()">Send</button>
-  <div class="content">
-    <div *ngFor="let msg of messageService.msg">
-      {{msg}}
+  <!-- app state -->
+  <div class="mt-2">
+    <h5>Current app state</h5>
+    <div class="my-2">
+      <span class="text-primary">Connected: </span>
+      {{connected}}
+    </div>
+    <div class="my-2">
+      <span class="text-primary">Subscribed: </span>
+      {{subscribed}}
+    </div>
+    <div class="my-2">
+      <span class="text-primary">Subscribed topic: </span>
+      {{subscribedTopic}}
     </div>
   </div>
+
+  <div [formGroup]="formGroup" class="mt-2">
+
+    <!-- token -->
+    <div class="my-4">
+      <label>Token: </label>
+      <input class="form-control" type="text" formControlName="token" />
+    </div>
+
+    <!-- subscribe topic: -->
+    <div class="my-4">
+      <label>Subscribe topic: </label>
+      <input class="form-control" type="text" formControlName="subscribeTopic" />
+    </div>
+
+    <!-- sendMessageEndpoint -->
+    <div class="my-4">
+      <label>Send message endpoint: </label>
+      <input class="form-control" type="text" formControlName="sendMessageEndpoint" />
+    </div>
+
+    <!-- message -->
+    <div class="my-4">
+      <label>Message: </label>:
+      <input class="form-control" type="text" formControlName="message">
+    </div>
+
+    <!-- btn -->
+    <div class="my-4">
+      <button class="btn btn-success mx-2" (click)="connect()">connect</button>
+      <button class="btn btn-success mx-2" (click)="subscribe()">subscribe</button>
+      <button class="btn btn-success mx-2" (click)="send()">send</button>
+    </div>
+
+    <div class="content my-4">
+      <div *ngFor="let m of msg">
+        {{m}}
+      </div>
+    </div>
+
+  </div>
+
 </div>

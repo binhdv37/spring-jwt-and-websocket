@@ -16,9 +16,6 @@ import java.util.UUID;
 @RequestMapping("/api/user")
 public class UserController extends BaseController {
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-
     @PreAuthorize("hasAnyAuthority(\"" + AuthorityConstant.USER_VIEW + "\")")
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") UUID id) throws MyAppException {
@@ -42,11 +39,5 @@ public class UserController extends BaseController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable UUID id) throws MyAppException {
         return ResponseEntity.ok(checkNullAndToBaseResp(userService.deleteById(id)));
-    }
-
-    @GetMapping("/sendMessage")
-    public ResponseEntity<?> sendMessage(@RequestParam(name = "message") String message) throws MyAppException {
-        this.messagingTemplate.convertAndSend("/topic/greeting", message);
-        return ResponseEntity.ok().build();
     }
 }
