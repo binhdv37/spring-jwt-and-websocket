@@ -51,7 +51,8 @@ export class AppComponent implements OnInit{
         } // on connect success callback
       );
     } else {
-      console.error('-- Token is required');
+      console.error('Token is required');
+      window.alert('Token is required');
     }
   }
 
@@ -61,7 +62,8 @@ export class AppComponent implements OnInit{
     if (message && sendMessageEndpoint) {
       this.stompClient.send(sendMessageEndpoint , {}, message);
     } else {
-      console.error('-- Message or endpoint have not defined yet');
+      console.error('Message and endpoint have not defined yet');
+      window.alert('Message and endpoint have not defined yet');
     }
   }
 
@@ -69,7 +71,7 @@ export class AppComponent implements OnInit{
     const subscribeTopic = this.formGroup.get('subscribeTopic').value;
     if (subscribeTopic) {
       this.stompClient.subscribe(subscribeTopic, (message) => {
-        console.log('-- Receive message: ', message);
+        // console.log('-- Receive message: ', message);
         if (message.body) {
           this.msg.push(message.body);
         }
@@ -77,7 +79,8 @@ export class AppComponent implements OnInit{
       this.subscribed = true;
       this.subscribedTopic = subscribeTopic;
     } else {
-      console.error('-- Subscribe topic have not defined yet!');
+      console.error('Subscribe topic have not defined yet!');
+      window.alert('Subscribe topic have not defined yet!');
     }
   }
 

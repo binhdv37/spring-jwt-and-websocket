@@ -50,13 +50,13 @@
     <!-- subscribe topic: -->
     <div class="my-4">
       <label>Subscribe topic: </label>
-      <input class="form-control" type="text" formControlName="subscribeTopic" />
+      <input class="form-control" type="text" placeholder="/topic/user/1" formControlName="subscribeTopic" />
     </div>
 
     <!-- sendMessageEndpoint -->
     <div class="my-4">
       <label>Send message endpoint: </label>
-      <input class="form-control" type="text" formControlName="sendMessageEndpoint" />
+      <input class="form-control" type="text" placeholder="/topic/user/2" formControlName="sendMessageEndpoint" />
     </div>
 
     <!-- message -->
@@ -67,8 +67,8 @@
 
     <!-- btn -->
     <div class="my-4">
-      <button class="btn btn-success mx-2" (click)="connect()">connect</button>
-      <button class="btn btn-success mx-2" (click)="subscribe()">subscribe</button>
+      <button class="btn btn-primary mx-2" (click)="connect()">connect</button>
+      <button class="btn btn-info mx-2" (click)="subscribe()">subscribe</button>
       <button class="btn btn-success mx-2" (click)="send()">send</button>
     </div>
 
